@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as Add } from "./images/add.svg";
 import { useState, useEffect, useRef } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import List from "./components/List";
 const Title = styled.h1`
   font-family: "Baloo Tamma 2";
@@ -83,22 +84,25 @@ function TodoListApp() {
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || [
       {
-        id: 1,
+        id: uuidv4(),
         title: "gggg",
         undo: true,
       },
       {
-        id: 2,
+        id: uuidv4(),
         title: "apple",
         undo: true,
       },
     ]
   );
+  const [filterTodos, setFilterTodos] = useState(todos);
   const [disable, setDisable] = useState(true);
   const inputRef = useRef(null);
   const addtodo = () => {
     const value = inputRef.current.value;
-    setTodos([{ id: 4, title: value, undo: true }, ...todos]);
+    const newTodo = [{ id: uuidv4(), title: value, undo: true }, ...todos];
+    setTodos(newTodo);
+    setFilterTodos(newTodo);
     setDisable(true);
     inputRef.current.value = "";
   };
@@ -110,6 +114,7 @@ function TodoListApp() {
 
   const deleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
+    setFilterTodos(todos);
   };
 
   const toggleUndo = (id) => {
@@ -118,16 +123,32 @@ function TodoListApp() {
         return todo.id === id ? { ...todo, undo: !todo.undo } : todo;
       })
     );
+    setFilterTodos(todos);
   };
 
   const clearCompleteTodo = () => {
-    setTodos(todos.filter((todo) => todo.undo))
+    setFilterTodos(todos.filter((todo) => todo.undo))
   };
-  useEffect(() => {
+
+  const clickTabHandle = (type) => {
+    
+    switch (type) {
+      case "all":
+        setFilterTodos(todos);
+        break;
+      case "undo":
+        setFilterTodos(todos.filter((todo) => todo.undo))
+      default:
+        setFilterTodos(todos.filter((todo) => !todo.undo))
+        break;
+    }
+  }
+/*   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  }, [todos]); */
   return (
     <>
+    {console.log("sdfsdf")}
       <Title>TODO LIST</Title>
       <Container>
         <TodoInput>
@@ -143,12 +164,12 @@ function TodoListApp() {
         </TodoInput>
         <TodoListContainer>
           <Tab>
-            <TabContent>全部</TabContent>
-            <TabContent>待完成</TabContent>
-            <TabContent>已完成</TabContent>
+            <TabContent onClick={() =>clickTabHandle("all")}>全部</TabContent>
+            <TabContent onClick={() =>clickTabHandle("undo")}>待完成</TabContent>
+            <TabContent onClick={() =>clickTabHandle("completed")}>已完成</TabContent>
           </Tab>
           <List
-            todos={todos}
+            todos={filterTodos}
             deleteTodo={deleteTodo}
             toggleUndo={toggleUndo}
             clearCompleteTodo={clearCompleteTodo}
