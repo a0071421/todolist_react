@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as Add } from "./images/add.svg";
-import { ReactComponent as Delete } from "./images/cancel.svg";
-
+import { useState, useEffect, useRef } from "react";
+import List from "./components/List";
 const Title = styled.h1`
   font-family: "Baloo Tamma 2";
   font-weight: bold;
@@ -24,6 +24,7 @@ const TodoInput = styled.div`
   border-radius: 10px;
   padding: 0.25rem 0rem 0.25rem 1rem;
   input {
+    display: inline-block;
     width: 100%;
     border: 0;
     outline: 0;
@@ -35,9 +36,6 @@ const TodoInput = styled.div`
 const AddBtn = styled.button`
   margin-right: 3px;
   display: inline-block;
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
   padding: 0.25rem;
   line-height: 1;
   border-radius: 10px;
@@ -52,9 +50,12 @@ const AddBtn = styled.button`
     width: 20px;
     height: auto;
   }
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
-const TodoListWrapper = styled.div`
+const TodoListContainer = styled.div`
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 0 15px 0 rgb(0 0 0 / 15%);
@@ -78,127 +79,81 @@ const TabContent = styled.li`
   cursor: pointer;
 `;
 
-const TodoList = styled.div`
-  padding: 1rem;
-`;
-
-const List = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding-left: 0px;
-`;
-
-const Item = styled.li`
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  position: relative;
-  padding-right: 2rem;
-`;
-
-const CheckBoxLabel = styled.label`
-  position: relative;
-
-  user-select: none;
-  width: 100%;
-  display: block;
-  padding-left: 44px;
-  cursor: pointer;
-`;
-
-const CheckBoxInput = styled.input`
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-  display: block;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-`;
-
-const CheckBoxContent = styled.span`
-  display: block;
-  padding: 1rem 0;
-  border-bottom: 1px solid #eee;
-  line-height: 1.5;
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%) scale(1);
-    height: 20px;
-    width: 20px;
-    border-radius: 5px;
-    border: 1px solid #333;
-    pointer-events: none;
-    transition: 0.3s ease;
-  }
-`;
-
-const DeleteBtn = styled(Delete)`
-  position: absolute;
-  cursor: pointer;
-  opacity: 1;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1rem;
-  height: 1rem;
-`;
-
-const ListFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 1.5rem 2rem 1rem 0.5rem;
-  font-size: 14px;
-`;
-
-const BtnClear = styled.a`
-  color: #9f9a91;
-  cursor: pointer;
-`;
-
 function TodoListApp() {
+  const [todos, setTodos] = useState(
+    JSON.parse(localStorage.getItem("todos")) || [
+      {
+        id: 1,
+        title: "gggg",
+        undo: true,
+      },
+      {
+        id: 2,
+        title: "apple",
+        undo: true,
+      },
+    ]
+  );
+  const [disable, setDisable] = useState(true);
+  const inputRef = useRef(null);
+  const addtodo = () => {
+    const value = inputRef.current.value;
+    setTodos([{ id: 4, title: value, undo: true }, ...todos]);
+    setDisable(true);
+    inputRef.current.value = "";
+  };
+  const handleChange = () => {
+    const value = inputRef.current.value;
+    if (!value) setDisable(true);
+    else setDisable(false);
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const toggleUndo = (id) => {
+    setTodos(
+      todos.map((todo) => {
+        return todo.id === id ? { ...todo, undo: !todo.undo } : todo;
+      })
+    );
+  };
+
+  const clearCompleteTodo = () => {
+    setTodos(todos.filter((todo) => todo.undo))
+  };
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
   return (
     <>
       <Title>TODO LIST</Title>
       <Container>
         <TodoInput>
-          <input type="text" placeholder="請輸入代辦事項" />
-          <AddBtn>
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="請輸入代辦事項"
+            onChange={handleChange}
+          />
+          <AddBtn onClick={addtodo} disabled={disable}>
             <Add />
           </AddBtn>
         </TodoInput>
-        <TodoListWrapper>
+        <TodoListContainer>
           <Tab>
             <TabContent>全部</TabContent>
             <TabContent>待完成</TabContent>
             <TabContent>已完成</TabContent>
           </Tab>
-          <TodoList>
-            <List>
-              <Item>
-                <CheckBoxLabel>
-                  <CheckBoxInput type="checkbox"></CheckBoxInput>
-                  <CheckBoxContent>helo</CheckBoxContent>
-                </CheckBoxLabel>
-                <DeleteBtn />
-              </Item>
-              <Item>
-                <CheckBoxLabel>
-                  <CheckBoxInput type="checkbox"></CheckBoxInput>
-                  <CheckBoxContent>helo</CheckBoxContent>
-                </CheckBoxLabel>
-              </Item>
-            </List>
-            <ListFooter>
-              0 個待完成項目
-              <BtnClear>清除已完成項目</BtnClear>
-            </ListFooter>
-          </TodoList>
-        </TodoListWrapper>
+          <List
+            todos={todos}
+            deleteTodo={deleteTodo}
+            toggleUndo={toggleUndo}
+            clearCompleteTodo={clearCompleteTodo}
+          ></List>
+        </TodoListContainer>
       </Container>
     </>
   );
