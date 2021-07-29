@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as Add } from "./images/add.svg";
 import { useState, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import List from "./components/List";
 const Title = styled.h1`
   font-family: "Baloo Tamma 2";
@@ -97,6 +97,7 @@ function TodoListApp() {
   );
   const [filterTodos, setFilterTodos] = useState(todos);
   const [disable, setDisable] = useState(true);
+  const [tabType, setTabType] = useState("all");
   const inputRef = useRef(null);
   const addtodo = () => {
     const value = inputRef.current.value;
@@ -113,42 +114,47 @@ function TodoListApp() {
   };
 
   const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-    setFilterTodos(todos);
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+    setFilterTodos(newTodos);
   };
 
   const toggleUndo = (id) => {
-    setTodos(
-      todos.map((todo) => {
-        return todo.id === id ? { ...todo, undo: !todo.undo } : todo;
-      })
+    const newTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, undo: !todo.undo } : todo
     );
-    setFilterTodos(todos);
+    setTodos(newTodos);
+    setFilterTodos(newTodos);
   };
 
   const clearCompleteTodo = () => {
-    setFilterTodos(todos.filter((todo) => todo.undo))
+    setFilterTodos(todos.filter((todo) => todo.undo));
   };
 
   const clickTabHandle = (type) => {
-    
     switch (type) {
       case "all":
+        console.log(todos);
         setFilterTodos(todos);
         break;
       case "undo":
-        setFilterTodos(todos.filter((todo) => todo.undo))
+        console.log(todos);
+        setFilterTodos(todos);
+        break;
+      case "completed":
+        console.log(todos.filter((todo) => !todo.undo));
+        setFilterTodos(todos.filter((todo) => !todo.undo));
+        break;
       default:
-        setFilterTodos(todos.filter((todo) => !todo.undo))
         break;
     }
-  }
-/*   useEffect(() => {
+  };
+  /*   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]); */
   return (
     <>
-    {console.log("sdfsdf")}
+      {console.log("render")}
       <Title>TODO LIST</Title>
       <Container>
         <TodoInput>
@@ -164,9 +170,13 @@ function TodoListApp() {
         </TodoInput>
         <TodoListContainer>
           <Tab>
-            <TabContent onClick={() =>clickTabHandle("all")}>全部</TabContent>
-            <TabContent onClick={() =>clickTabHandle("undo")}>待完成</TabContent>
-            <TabContent onClick={() =>clickTabHandle("completed")}>已完成</TabContent>
+            <TabContent onClick={() => clickTabHandle("all")}>全部</TabContent>
+            <TabContent onClick={() => clickTabHandle("undo")}>
+              待完成
+            </TabContent>
+            <TabContent onClick={() => clickTabHandle("completed")}>
+              已完成
+            </TabContent>
           </Tab>
           <List
             todos={filterTodos}

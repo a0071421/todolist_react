@@ -26,6 +26,7 @@ const BtnClear = styled.a`
 
 const List = ({ todos, deleteTodo, toggleUndo, clearCompleteTodo }) => {
   const getUndo = useMemo(() => {
+    console.log(todos);
     return todos.filter((todo) => todo.undo).length;
   }, [todos]);
   return (
