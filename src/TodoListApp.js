@@ -76,7 +76,8 @@ const Tab = styled.ul`
 const TabContent = styled.li`
   padding: 1rem;
   flex-grow: 1;
-  border-bottom: 2px solid #efefef;
+  border-bottom: ${(props) =>
+    props.isActive ? "2px solid #333333;" : "2px solid #efefef"};
   cursor: pointer;
 `;
 
@@ -97,7 +98,7 @@ function TodoListApp() {
   );
   // const [filterTodos, setFilterTodos] = useState(todos);
   const [disable, setDisable] = useState(true);
-  const [tabType, setTabType] = useState("all");
+  const [activeTab, setActiveTab] = useState("all");
   const inputRef = useRef(null);
   const addtodo = () => {
     const value = inputRef.current.value;
@@ -133,14 +134,14 @@ function TodoListApp() {
   };
 
   const filterTodos = useMemo(() => {
-    if (tabType === "all") {
+    if (activeTab === "all") {
       return todos;
-    } else if (tabType === "undo") {
+    } else if (activeTab === "undo") {
       return todos.filter((todo) => todo.undo);
     } else {
       return todos.filter((todo) => !todo.undo);
     }
-  }, [tabType]);
+  }, [activeTab]);
 
   /*   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -163,9 +164,22 @@ function TodoListApp() {
         </TodoInput>
         <TodoListContainer>
           <Tab>
-            <TabContent onClick={() => setTabType("all")}>全部</TabContent>
-            <TabContent onClick={() => setTabType("undo")}>待完成</TabContent>
-            <TabContent onClick={() => setTabType("completed")}>
+            <TabContent
+              onClick={() => setActiveTab("all")}
+              isActive={activeTab === "all"}
+            >
+              全部
+            </TabContent>
+            <TabContent
+              onClick={() => setActiveTab("undo")}
+              isActive={activeTab === "undo"}
+            >
+              待完成
+            </TabContent>
+            <TabContent
+              onClick={() => setActiveTab("completed")}
+              isActive={activeTab === "completed"}
+            >
               已完成
             </TabContent>
           </Tab>
