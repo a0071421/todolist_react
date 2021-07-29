@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import InputTodo from "./components/InputTodo";
 import List from "./components/List";
@@ -27,18 +27,7 @@ const TodoListContainer = styled.div`
 function TodoListApp() {
   // todos陣列
   const [todos, setTodos] = useState(
-    JSON.parse(localStorage.getItem("todos")) || [
-      {
-        id: uuidv4(),
-        title: "12345",
-        undo: true,
-      },
-      {
-        id: uuidv4(),
-        title: "11111",
-        undo: true,
-      },
-    ]
+    JSON.parse(localStorage.getItem("todos")) || []
   );
 
   // 選擇的tab
@@ -93,9 +82,9 @@ function TodoListApp() {
   const getUndo = useMemo(() => {
     return todos.filter((todo) => todo.undo).length;
   }, [todos]);
-  /*   useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]); */
+  }, [todos]);
   return (
     <>
       {console.log("render")}
