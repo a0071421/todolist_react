@@ -65,18 +65,6 @@ const CheckBoxInput = styled.input.attrs({ type: "checkbox" })`
   height: 100%;
   width: 100%;
   margin: 0;
-  /* &:checked ~ ${CheckBoxContent}::before {
-    border-color: transparent;
-    transform: translateY(-50%) scale(0);
-  }
-  &:checked ~ ${CheckBoxContent}::after {
-    opacity: 1;
-  }
-
-  &:checked ~ ${CheckBoxContent} {
-    color: #9f9a91;
-    text-decoration: line-through;
-  } */
 `;
 
 const DeleteBtn = styled(Delete)`

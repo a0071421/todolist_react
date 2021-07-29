@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useMemo } from "react";
 import Todo from "./Todo";
 
 const TodoListWrapper = styled.div`

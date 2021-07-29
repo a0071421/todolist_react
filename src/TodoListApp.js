@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { ReactComponent as Add } from "./images/add.svg";
 import { useState, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
+import InputTodo from "./components/InputTodo";
 import List from "./components/List";
+import Tabs from "./components/Tabs";
 const Title = styled.h1`
   font-family: "Baloo Tamma 2";
   font-weight: bold;
@@ -17,115 +18,53 @@ const Container = styled.div`
   max-width: 500px;
 `;
 
-const TodoInput = styled.div`
-  display: flex;
-  justify-content: space-between;
-  background: #ffffff;
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-  padding: 0.25rem 0rem 0.25rem 1rem;
-  input {
-    display: inline-block;
-    width: 100%;
-    border: 0;
-    outline: 0;
-    font-size: 1rem;
-    color: #333;
-  }
-`;
-
-const AddBtn = styled.button`
-  margin-right: 3px;
-  display: inline-block;
-  padding: 0.25rem;
-  line-height: 1;
-  border-radius: 10px;
-  text-align: center;
-  vertical-align: middle;
-  background: #333;
-  color: #fff;
-  text-decoration: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  svg {
-    width: 20px;
-    height: auto;
-  }
-  &:disabled {
-    opacity: 0.5;
-  }
-`;
-
 const TodoListContainer = styled.div`
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 0 15px 0 rgb(0 0 0 / 15%);
 `;
 
-const Tab = styled.ul`
-  display: flex;
-  text-align: center;
-  color: #9f9a91;
-  font-size: 14px;
-  list-style: none;
-  text-align: center;
-  padding-left: 0px;
-  margin-bottom: 0px;
-`;
-
-const TabContent = styled.li`
-  padding: 1rem;
-  flex-grow: 1;
-  border-bottom: ${(props) =>
-    props.isActive ? "2px solid #333333;" : "2px solid #efefef"};
-  cursor: pointer;
-`;
-
 function TodoListApp() {
+  // todos陣列
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || [
       {
         id: uuidv4(),
-        title: "gggg",
+        title: "12345",
         undo: true,
       },
       {
         id: uuidv4(),
-        title: "apple",
+        title: "11111",
         undo: true,
       },
     ]
   );
 
-  const [disable, setDisable] = useState(true);
+  // 選擇的tab
   const [activeTab, setActiveTab] = useState("all");
-  const inputRef = useRef(null);
-  const enterAddTodo = (e) => {
-    if (e.keyCode === 13) {
-      addtodo();
+
+  // 改變activeTabl
+  const changeActiveTab = (activeTab) => {
+    setActiveTab(activeTab);
+  };
+  // add todo
+  const addTodo = (todo) => {
+    if (todos.filter((item) => item.title === todo.title).length) {
+      alert("新增事項重複囉");
+      return;
     }
-  };
-  const addtodo = () => {
-    const value = inputRef.current.value;
-    if (!value) return;
-    const newTodo = [{ id: uuidv4(), title: value, undo: true }, ...todos];
-    setTodos(newTodo);
-
-    setDisable(true);
-    inputRef.current.value = "";
+    const newTodos = [{ ...todo }, ...todos];
+    setTodos(newTodos);
   };
 
-  const handleChange = () => {
-    const value = inputRef.current.value;
-    if (!value) setDisable(true);
-    else setDisable(false);
-  };
-
+  // 刪除指定todo
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
   };
 
+  // 設定指定todo的undo狀況
   const toggleUndo = (id) => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, undo: !todo.undo } : todo
@@ -133,11 +72,13 @@ function TodoListApp() {
     setTodos(newTodos);
   };
 
+  // 清除所有undo === false(做完)的todo
   const clearCompleteTodo = (e) => {
     e.preventDefault();
     setTodos(todos.filter((todo) => todo.undo));
   };
 
+  // 根據activeTab顯示對應之todos
   const filterTodos = useMemo(() => {
     if (activeTab === "all") {
       return todos;
@@ -147,6 +88,8 @@ function TodoListApp() {
       return todos.filter((todo) => !todo.undo);
     }
   }, [activeTab, todos]);
+
+  // 輸出目前有多少尚未完成todos
   const getUndo = useMemo(() => {
     return todos.filter((todo) => todo.undo).length;
   }, [todos]);
@@ -158,41 +101,10 @@ function TodoListApp() {
       {console.log("render")}
       <Title>TODO LIST</Title>
       <Container>
-        <TodoInput>
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="請輸入代辦事項"
-            onChange={handleChange}
-            onKeyUp={enterAddTodo}
-          />
-          <AddBtn onClick={addtodo} disabled={disable}>
-            <Add />
-          </AddBtn>
-        </TodoInput>
+        <InputTodo addTodo={addTodo}></InputTodo>
         {todos.length > 0 && (
           <TodoListContainer>
-            <Tab>
-              <TabContent
-                onClick={() => setActiveTab("all")}
-                isActive={activeTab === "all"}
-              >
-                全部
-              </TabContent>
-              <TabContent
-                onClick={() => setActiveTab("undo")}
-                isActive={activeTab === "undo"}
-              >
-                待完成
-              </TabContent>
-              <TabContent
-                onClick={() => setActiveTab("completed")}
-                isActive={activeTab === "completed"}
-              >
-                已完成
-              </TabContent>
-            </Tab>
-
+            <Tabs changeActiveTab={changeActiveTab}></Tabs>
             <List
               todos={filterTodos}
               deleteTodo={deleteTodo}
