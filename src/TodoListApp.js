@@ -96,18 +96,25 @@ function TodoListApp() {
       },
     ]
   );
-  // const [filterTodos, setFilterTodos] = useState(todos);
+
   const [disable, setDisable] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
   const inputRef = useRef(null);
+  const enterAddTodo = (e) => {
+    if (e.keyCode === 13) {
+      addtodo();
+    }
+  };
   const addtodo = () => {
     const value = inputRef.current.value;
+    if (!value) return;
     const newTodo = [{ id: uuidv4(), title: value, undo: true }, ...todos];
     setTodos(newTodo);
-    // setFilterTodos(newTodo);
+
     setDisable(true);
     inputRef.current.value = "";
   };
+
   const handleChange = () => {
     const value = inputRef.current.value;
     if (!value) setDisable(true);
@@ -117,7 +124,6 @@ function TodoListApp() {
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
-    // setFilterTodos(newTodos);
   };
 
   const toggleUndo = (id) => {
@@ -125,11 +131,10 @@ function TodoListApp() {
       todo.id === id ? { ...todo, undo: !todo.undo } : todo
     );
     setTodos(newTodos);
-    // setFilterTodos(newTodos);
   };
 
-  const clearCompleteTodo = () => {
-    // setFilterTodos(todos.filter((todo) => todo.undo));
+  const clearCompleteTodo = (e) => {
+    e.preventDefault();
     setTodos(todos.filter((todo) => todo.undo));
   };
 
@@ -141,8 +146,10 @@ function TodoListApp() {
     } else {
       return todos.filter((todo) => !todo.undo);
     }
-  }, [activeTab]);
-
+  }, [activeTab, todos]);
+  const getUndo = useMemo(() => {
+    return todos.filter((todo) => todo.undo).length;
+  }, [todos]);
   /*   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]); */
@@ -157,40 +164,44 @@ function TodoListApp() {
             type="text"
             placeholder="請輸入代辦事項"
             onChange={handleChange}
+            onKeyUp={enterAddTodo}
           />
           <AddBtn onClick={addtodo} disabled={disable}>
             <Add />
           </AddBtn>
         </TodoInput>
-        <TodoListContainer>
-          <Tab>
-            <TabContent
-              onClick={() => setActiveTab("all")}
-              isActive={activeTab === "all"}
-            >
-              全部
-            </TabContent>
-            <TabContent
-              onClick={() => setActiveTab("undo")}
-              isActive={activeTab === "undo"}
-            >
-              待完成
-            </TabContent>
-            <TabContent
-              onClick={() => setActiveTab("completed")}
-              isActive={activeTab === "completed"}
-            >
-              已完成
-            </TabContent>
-          </Tab>
-          {console.log(filterTodos + "gg")}
-          <List
-            todos={filterTodos}
-            deleteTodo={deleteTodo}
-            toggleUndo={toggleUndo}
-            clearCompleteTodo={clearCompleteTodo}
-          ></List>
-        </TodoListContainer>
+        {todos.length > 0 && (
+          <TodoListContainer>
+            <Tab>
+              <TabContent
+                onClick={() => setActiveTab("all")}
+                isActive={activeTab === "all"}
+              >
+                全部
+              </TabContent>
+              <TabContent
+                onClick={() => setActiveTab("undo")}
+                isActive={activeTab === "undo"}
+              >
+                待完成
+              </TabContent>
+              <TabContent
+                onClick={() => setActiveTab("completed")}
+                isActive={activeTab === "completed"}
+              >
+                已完成
+              </TabContent>
+            </Tab>
+
+            <List
+              todos={filterTodos}
+              deleteTodo={deleteTodo}
+              toggleUndo={toggleUndo}
+              clearCompleteTodo={clearCompleteTodo}
+              getUndo={getUndo}
+            ></List>
+          </TodoListContainer>
+        )}
       </Container>
     </>
   );

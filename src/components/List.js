@@ -24,11 +24,13 @@ const BtnClear = styled.a`
   cursor: pointer;
 `;
 
-const List = ({ todos, deleteTodo, toggleUndo, clearCompleteTodo }) => {
-  const getUndo = useMemo(() => {
-    console.log(todos);
-    return todos.filter((todo) => todo.undo).length;
-  }, [todos]);
+const List = ({
+  todos,
+  deleteTodo,
+  toggleUndo,
+  clearCompleteTodo,
+  getUndo,
+}) => {
   return (
     <TodoListWrapper>
       <Todos>
