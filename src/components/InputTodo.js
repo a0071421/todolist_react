@@ -60,6 +60,7 @@ const InputTodo = ({ addTodo }) => {
         undo: true,
       });
       inputRef.current.value = "";
+      setDisable(true);
     }
   };
   // 判斷input是否為空
