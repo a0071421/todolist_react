@@ -31,21 +31,20 @@ export const PrimaryButton = styled(Link)`
   }
 `;
 
-export const WarningButton = styled(Link)`
+export const InfoButton = styled(Link)`
   ${defaultButton};
-  color: ${(props) => (props.active ? "#fff" : "#ffc107")};
-  background-color: ${(props) => (props.active ? "#ffc720" : "")};
-  border-color: #ffc107;
+  color: ${(props) => (props.active ? "#fff" : "#0dcaf0")};
+  background-color: ${(props) => (props.active ? "#0dcaf0" : "")};
+  border-color: #0dcaf0;
   &:hover {
     color: #fff;
-    background-color: #ffc720;
-    border-color: #ffc720;
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
   }
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
   margin-top: 2rem;
   & > a {

@@ -125,8 +125,7 @@ const WeatherSetting = ({ setCurpage, setCurCity, cityName }) => {
 
   return (
     <WeatherSettingWrapper>
-      {(renderCount.current += 1)}
-      {console.log("render", renderCount.current)}
+      {console.log("render", (renderCount.current += 1))}
       <Title>設定</Title>
       <StyledLabel htmlFor="location">地區</StyledLabel>
       <StyledInputList

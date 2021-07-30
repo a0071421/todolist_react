@@ -6,8 +6,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import {
   ButtonGroup,
   PrimaryButton,
-  WarningButton,
-} from "todolist/style/styled-components";
+  InfoButton,
+} from "@/global/styled-components";
 import TodoListApp from "todolist/TodoListApp";
 import WeatherApp from "weather/WeatherApp";
 import reportWebVitals from "@/reportWebVitals";
@@ -19,7 +19,7 @@ ReactDOM.render(
     <Router>
       <ButtonGroup>
         <PrimaryButton to="/">即時天氣預報</PrimaryButton>
-        <WarningButton to="/todolist">Todo List</WarningButton>
+        <InfoButton to="/todolist">Todo List</InfoButton>
       </ButtonGroup>
       <Route path="/" exact component={WeatherApp}></Route>
       <Route path="/todolist" component={TodoListApp}></Route>
