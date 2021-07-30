@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as Add } from "../images/add.svg";
+import { ReactComponent as Add } from "todo/images/add.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef } from "react";
 
@@ -53,6 +53,8 @@ const InputTodo = ({ addTodo }) => {
 
   // 按下enter時，將todo加入至陣列
   const enterAddTodo = (e) => {
+    // input 為空
+    if (handleChangeIsEmpty()) return;
     if (e.keyCode === 13) {
       addTodo({
         id: uuidv4(),
@@ -64,10 +66,15 @@ const InputTodo = ({ addTodo }) => {
     }
   };
   // 判斷input是否為空
-  const handleChange = () => {
+  const handleChangeIsEmpty = () => {
     const value = inputRef.current.value;
-    if (!value) setDisable(true);
-    else setDisable(false);
+    if (!value) {
+      setDisable(true);
+      return true;
+    } else {
+      setDisable(false);
+      return false;
+    }
   };
 
   // 將新todo傳入addTodo
@@ -86,7 +93,7 @@ const InputTodo = ({ addTodo }) => {
         ref={inputRef}
         type="text"
         placeholder="請輸入代辦事項"
-        onChange={handleChange}
+        onChange={handleChangeIsEmpty}
         onKeyUp={enterAddTodo}
       />
       <AddBtn onClick={handleAddTodo} disabled={disable}>

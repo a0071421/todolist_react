@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as Delete } from "../images/cancel.svg";
+import { ReactComponent as Delete } from "todo/images/cancel.svg";
 
 const Item = styled.li`
   margin-bottom: 0.5rem;

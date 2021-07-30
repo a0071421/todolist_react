@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Todo from "./Todo";
+import Todo from "todo/components/Todo";
 
 const TodoListWrapper = styled.div`
   padding: 1rem;
