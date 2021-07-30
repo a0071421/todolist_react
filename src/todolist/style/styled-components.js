@@ -51,4 +51,5 @@ export const ButtonGroup = styled.div`
   & > a {
     width: 30%;
   }
+  margin-bottom: 2rem;
 `;

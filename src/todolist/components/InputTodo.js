@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as Add } from "todo/images/add.svg";
+import { ReactComponent as Add } from "todolist/images/add.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef } from "react";
 

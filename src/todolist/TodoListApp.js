@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 import { useState, useMemo, useEffect } from "react";
-import InputTodo from "todo/components/InputTodo";
-import List from "todo/components/List";
-import Tabs from "todo/components/Tabs";
+import InputTodo from "todolist/components/InputTodo";
+import List from "todolist/components/List";
+import Tabs from "todolist/components/Tabs";
 
 const Title = styled.h1`
   font-family: "Baloo Tamma 2";

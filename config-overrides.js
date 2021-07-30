@@ -5,7 +5,7 @@ const resolve = (dir) => path.join(__dirname, ".", dir);
 module.exports = override(
   addWebpackAlias({
     ["@"]: resolve("src"),
-    ["todo"]: resolve("src/todolist"),
-    ["weather"]: resolve("src/realtime-weather"),
+    ["todolist"]: resolve("src/todolist"),
+    ["weather"]: resolve("src/weather"),
   })
 );
