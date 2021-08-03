@@ -10,6 +10,8 @@ import { ReactComponent as CogIcon } from "../images/cog.svg";
 
 const WeatherCardWrapper = styled.div`
   position: relative;
+  min-width: 300px;
+
   box-shadow: ${({ theme }) => theme.boxShadow};
   background-color: ${({ theme }) => theme.foregroundColor};
   box-sizing: border-box;

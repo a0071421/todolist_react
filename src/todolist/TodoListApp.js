@@ -29,7 +29,6 @@ function TodoListApp() {
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || []
   );
-
   // 選擇的tab
   const [activeTab, setActiveTab] = useState("all");
 
@@ -85,6 +84,7 @@ function TodoListApp() {
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
+
   return (
     <Container>
       {console.log("render")}
