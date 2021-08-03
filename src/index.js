@@ -16,7 +16,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ResetStyle />
     <GlobalStyle />
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <ButtonGroup>
         <PrimaryButton to="/">即時天氣預報</PrimaryButton>
         <InfoButton to="/todolist">Todo List</InfoButton>
