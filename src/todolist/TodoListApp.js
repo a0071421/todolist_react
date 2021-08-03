@@ -15,7 +15,7 @@ const Title = styled.h1`
 const Container = styled.div`
   margin: 0 auto 1.5rem auto;
   padding: 0 1rem;
-  max-width: 500px;
+  max-width: 800px;
 `;
 
 const TodoListContainer = styled.div`

@@ -34,7 +34,7 @@ const Description = styled.div`
 
 const CurrentWeather = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   margin-bottom: 30px;
 `;
